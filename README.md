@@ -9,6 +9,8 @@ A person approves anything that leaves the building.
 **[▶ Open the live demo](https://sayamdev.github.io/relay/)** — no sign-up, no
 API key, no install. All data is fictional.
 
+![Relay dashboard: key metrics, an AI executive briefing and recommended actions](docs/screenshots/dashboard.png)
+
 ---
 
 ## Try it in three minutes
@@ -97,12 +99,21 @@ due in 4 hours, source *AI enquiry analysis*, linked back to the enquiry.
 billing. The draft uses what was extracted: Helen's name, the October target,
 the calculated price band.
 
+![The inbox: an enquiry with its classification, priority, response window, estimated value and extracted fields](docs/screenshots/inbox.png)
+
 Then it stops. Status becomes **awaiting approval** and the audit trail records
 *"No message is sent until a person approves the draft."*
 
 Approving marks the enquiry responded, closes the linked task, and writes two
 entries: the approval (noting whether the draft was edited first) and a note
 that nothing was sent to a real recipient.
+
+![The generated reply with Approve, Edit and Reject controls, above a note that Relay never sends anything on its own](docs/screenshots/approval.png)
+
+Every one of those steps lands in the activity log, attributed to the AI, an
+automation, a person or the system:
+
+![The activity log, a chronological trail of AI decisions, automated steps and human approvals](docs/screenshots/activity.png)
 
 ### The two seams
 
@@ -153,6 +164,15 @@ the work.
 **The UI never imports a concrete AI provider.** Swapping the rules engine for a
 local model is a configuration change, not a rewrite.
 
+### Asking the business a question
+
+The analyst separates the three things people usually run together — what
+happened, the evidence for it, and what to do about it — and refuses to answer
+when the data cannot support an answer, rather than producing something
+plausible.
+
+![The AI analyst answering "Why did sales drop this week?" with an answer, a main driver, supporting evidence and a recommended action](docs/screenshots/analyst.png)
+
 ### Where the numbers come from
 
 Nothing on the dashboard is hard-coded. Every figure is derived from state by
@@ -184,6 +204,8 @@ This is a portfolio demonstration, and it says so in the product.
   real data and refuses when the data cannot support an answer
 - **Workflow automation** — three production-shaped workflows behind an adapter
   interface, running locally or in n8n
+
+  ![The automations screen: three workflows with triggers, steps, run counts and per-step results](docs/screenshots/automations.png)
 - **Human-in-the-loop AI** — nothing is sent, escalated or closed without an
   explicit approval, and rejections are recorded too
 - **Responsible AI boundaries** — validated model output, uncalibrated scores
