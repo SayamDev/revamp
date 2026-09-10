@@ -183,7 +183,7 @@ User clicks "Approve"
 
 ## Testing strategy
 
-105 tests across eight files, chosen to cover the parts where a bug would be
+108 tests across nine files, chosen to cover the parts where a bug would be
 invisible rather than to chase a coverage number:
 
 | File | What it protects |
@@ -195,6 +195,7 @@ invisible rather than to chase a coverage number:
 | `automation/demoAdapter.test.ts` | Every workflow's steps and effects, failure with no side effects, adapter selection and fallback |
 | `store/useRelayStore.test.ts` | The full enquiry workflow, approval, rejection, analyst history, demo reset |
 | `pages/Tasks.test.tsx` | Real user interactions: completing, reopening, filtering, sorting, empty state |
+| `components/GuidedStart.test.tsx` | The first-run walkthrough: three steps, dismissal, and reappearing after a demo reset |
 | `pages/Automations.test.tsx` | Running a workflow from the UI, the recoverable error panel, and the blocked-workflow explanation |
 
 ## Deployment

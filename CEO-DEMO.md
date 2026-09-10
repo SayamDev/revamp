@@ -3,8 +3,9 @@
 A 3–5 minute walkthrough. Open the demo, then follow the eight steps below.
 
 **Before you start:** click **Reset demo** in the header. That returns every
-enquiry, task and activity to its starting state, so the demo works the same way
-every time.
+enquiry, task and activity to its starting state — and brings back the
+three-step walkthrough on the dashboard — so the demo works the same way every
+time.
 
 ---
 
@@ -58,6 +59,10 @@ Scroll to the draft.
 
 > "It has also written the reply, and it has used what it extracted — Helen's
 > name, the October target, the price band it calculated."
+
+> **Before you click, point at "Automated actions" on the dashboard.** It moves
+> when you run this. None of the headline figures are hard-coded — they are
+> derived from the data, so what you do here changes what the dashboard says.
 
 ### 6 · Approve — 30 seconds
 

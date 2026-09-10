@@ -56,6 +56,8 @@ interface RelayState {
   providerChosenByUser: boolean
   localProviderAvailable: boolean | null
   signedIn: boolean
+  /** Hides the first-run walkthrough. Restored by resetDemoData for repeat demos. */
+  guideDismissed: boolean
   seededAt: string
 
   // Async flags, keyed so several panels can load independently
@@ -64,6 +66,7 @@ interface RelayState {
   // Actions
   signIn: () => void
   signOut: () => void
+  dismissGuide: () => void
   resetDemoData: () => void
   setProviderKey: (key: ProviderKey) => Promise<void>
   checkLocalProvider: () => Promise<void>
@@ -169,6 +172,7 @@ export const useRelayStore = create<RelayState>()(
         providerChosenByUser: false,
         localProviderAvailable: null,
         signedIn: false,
+        guideDismissed: false,
         pending: {},
 
         signIn: () => {
@@ -180,8 +184,12 @@ export const useRelayStore = create<RelayState>()(
 
         signOut: () => set({ signedIn: false }),
 
+        dismissGuide: () => set({ guideDismissed: true }),
+
         resetDemoData: () => {
-          set({ ...seedState(), pending: {} })
+          // The walkthrough comes back too, so the next demo starts the same
+          // way as the first one.
+          set({ ...seedState(), pending: {}, guideDismissed: false })
         },
 
         setProviderKey: async (key) => {
@@ -450,6 +458,7 @@ export const useRelayStore = create<RelayState>()(
         providerKey: state.providerKey,
         providerChosenByUser: state.providerChosenByUser,
         signedIn: state.signedIn,
+        guideDismissed: state.guideDismissed,
         seededAt: state.seededAt,
       }),
     },

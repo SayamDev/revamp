@@ -12,6 +12,7 @@ import {
   YAxis,
 } from 'recharts'
 import { ArrowRight, Clock, Sparkles } from 'lucide-react'
+import { GuidedStart } from '@/components/GuidedStart'
 import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { StatCard } from '@/components/ui/StatCard'
 import { Button } from '@/components/ui/Button'
@@ -60,18 +61,20 @@ function BriefingCard() {
   const generateBriefing = useRelayStore((state) => state.generateBriefing)
   const pending = useRelayStore((state) => state.pending['briefing'])
   const providerKey = useRelayStore((state) => state.providerKey)
+  const seededAt = useRelayStore((state) => state.seededAt)
 
   const loading = pending?.status === 'loading'
 
-  // Generate once on first visit; the user refreshes it manually after that.
-  // The ref guard keeps StrictMode's double-invoked effect from running the
-  // briefing automation twice.
-  const requested = useRef(false)
+  // Generate once per seeded dataset; the user refreshes it manually after
+  // that. Keying the guard on `seededAt` rather than a boolean means resetting
+  // the demo produces a fresh briefing instead of an empty card, while still
+  // stopping StrictMode's double-invoked effect from running it twice.
+  const requestedFor = useRef<string | null>(null)
   useEffect(() => {
-    if (requested.current || briefing || loading) return
-    requested.current = true
+    if (briefing || loading || requestedFor.current === seededAt) return
+    requestedFor.current = seededAt
     void generateBriefing()
-  }, [briefing, loading, generateBriefing])
+  }, [briefing, loading, seededAt, generateBriefing])
 
   return (
     <Card>
@@ -184,6 +187,8 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <GuidedStart />
+
       <section aria-label="Key metrics" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="New leads"
