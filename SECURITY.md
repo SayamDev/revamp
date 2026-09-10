@@ -90,9 +90,15 @@ fail closed to the deterministic path.
   probability, next to every place it appears.
 - **The analyst refuses to answer what the data cannot support**, returning an
   explicit "no supporting data" state rather than a plausible fabrication.
-- **Numbers are never model-generated.** Even with a local model enabled,
-  priority, deal value, extracted fields and every metric are computed by the
-  deterministic layer. The model may only rephrase.
+- **Numbers are never model-generated, and model claims are validated, not
+  trusted.** Even with a local model enabled, priority, deal value, extracted
+  fields and every metric are computed by the deterministic layer, and the
+  briefing and analyst are excluded from the model path entirely. Where the
+  model does contribute wording, its output is checked before it is shown: a
+  proposed next action is rejected unless it restates the response window the
+  priority sets, and a commercial draft is rejected if it drops the calculated
+  price band. Both rejections fall back to the deterministic output, and the
+  first is recorded in the reasoning trail.
 - **Every AI action is auditable.** The activity log records the actor (AI,
   automation, person or system), the decision and the reasoning behind it.
 

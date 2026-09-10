@@ -74,11 +74,22 @@ Two implementations:
   is not replaying canned strings. It is also not a language model, and the UI
   labels it "Demo AI" everywhere.
 - **`LocalAIProvider`** — talks to Ollama. Crucially it *refines* the
-  deterministic result rather than replacing it: the model may improve intent,
-  next action and analyst prose, while priority, deal value, extracted fields
-  and every metric stay rule-derived. A model cannot invent a number in this
-  design. Parse failures and timeouts fall back to the deterministic path and
-  say so in the reasoning trail.
+  deterministic result rather than replacing it, and the refinement is
+  validated rather than trusted:
+
+  | Output | Rule |
+  | --- | --- |
+  | `intent` | Model wording accepted |
+  | `recommendedAction` | Accepted only if `slaMentioned()` confirms it restates the response window the priority sets; otherwise the rule-based action is kept and the rejection is logged in the reasoning trail |
+  | Response draft | Accepted only if `quotesFigure()` confirms it carries the calculated price band, and only if it is long enough to be a reply |
+  | Priority, deal value, extracted fields, metrics | Never model-derived |
+  | Briefing, analyst answers | Never model-derived — see below |
+
+  The briefing and the analyst are deliberately excluded. Both are arithmetic,
+  and a small local model gets arithmetic wrong in ways that are hard to spot:
+  in testing, llama3.2 rewrote a revenue explanation into a claim that
+  contradicted the evidence rendered beneath it. Parse failures, timeouts and
+  failed validations all fall back to the deterministic path.
 
 `createProvider(key)` in `src/ai/index.ts` is the only place a concrete provider
 is named.
@@ -172,12 +183,13 @@ User clicks "Approve"
 
 ## Testing strategy
 
-89 tests across seven files, chosen to cover the parts where a bug would be
+105 tests across eight files, chosen to cover the parts where a bug would be
 invisible rather than to chase a coverage number:
 
 | File | What it protects |
 | --- | --- |
 | `ai/rules.test.ts` | Classification, urgency, extraction, value estimation, priority thresholds |
+| `ai/ollamaProvider.test.ts` | The local-model guards: rejecting an action that loosens the response window, rejecting a draft that drops the price band, staying deterministic for the analyst, and every fallback path (with `fetch` stubbed) |
 | `ai/demoProvider.test.ts` | End-to-end analysis, draft tone, briefing structure, analyst answers, refusal to answer unsupported questions, JSON extraction from model output |
 | `analytics/metrics.test.ts` | Dashboard arithmetic, division-by-zero cases, week comparison, SLA breaches |
 | `automation/demoAdapter.test.ts` | Every workflow's steps and effects, failure with no side effects, adapter selection and fallback |

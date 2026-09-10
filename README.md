@@ -40,7 +40,7 @@ on the dashboard.
 - **Human-in-the-loop AI** — nothing is sent, escalated or closed without an
   explicit approval, and rejections are recorded too
 - **Full-stack engineering** — typed domain model, service seams, pure
-  derivations, 89 tests, strict TypeScript
+  derivations, 105 tests, strict TypeScript
 - **Data-driven decision support** — every dashboard figure is derived from
   state, so actions in the app change what the CEO sees
 - **Auditability** — a complete activity trail of what the AI did and why
@@ -56,7 +56,7 @@ This is a portfolio demonstration, and it says so in the product. Specifically:
 | Claim | Reality |
 | --- | --- |
 | The demo AI | A **deterministic rules engine**, not a language model. It genuinely parses the enquiry text and the business data — it is not replaying canned strings — but it is rules, and the UI labels it "Demo AI" everywhere. |
-| Local AI | Optional. With Ollama running, a real model refines intent, next action and analyst prose. Numbers stay rule-derived so the model cannot invent figures. Falls back silently to the rules if the model is unreachable or returns unparseable output. |
+| Local AI | Optional, and **verified working** against Ollama with `llama3.2`. The model rewrites intent, the next action and the reply; it is blocked from producing or contradicting a number, and the briefing and analyst stay deterministic. Falls back to the rules if the model is unreachable or returns output that fails those checks. |
 | Confidence scores | A **rule separation score** — how far the winning classification is ahead of the runner-up. Illustrative. It is not a calibrated probability and no calibration has been performed. The UI says this wherever a score appears. |
 | n8n | Optional, and it really works — see [`n8n/README.md`](n8n/README.md). The hosted demo cannot reach a webhook on your laptop, so it runs the local engine. |
 | The data | Entirely fictional. Northwind Studio, its customers and every figure are invented. No real personal data exists anywhere in this repository. |
@@ -175,12 +175,31 @@ VITE_AI_PROVIDER=ollama
 VITE_OLLAMA_MODEL=llama3.2
 ```
 
-What changes: the model rewrites the enquiry's intent and recommended action,
-drafts the reply, and phrases the analyst's answer. What does not change:
-priority, deal value, extracted fields and every figure stay rule-derived, so
-the model cannot invent numbers. If Ollama is unreachable, or the response will
-not parse, Relay silently falls back to the deterministic path and says so in
-the reasoning trail.
+**What the model is allowed to do:** rewrite the enquiry's intent, propose the
+next action, and write the reply.
+
+**What it is not allowed to do:** produce a number, or contradict one. Priority,
+deal value, extracted fields, the response window and every dashboard metric
+stay rule-derived. Two guards enforce this at the boundary:
+
+- A proposed next action is **rejected** unless it restates the response window
+  the priority sets, so the model cannot quietly turn "within 4 hours" into "by
+  the end of the week". The rejection is recorded in the reasoning trail.
+- A commercial draft is **rejected** if it drops the calculated price band, and
+  the deterministic draft is used instead.
+
+**The briefing and the analyst stay deterministic in every mode.** Both are
+arithmetic over the business data, and in testing llama3.2 rewrote "revenue
+fell, driven by lead volume" into "driven by a decrease in conversion rate, as
+the conversion rate increased" — contradicting the evidence rendered directly
+beneath it. Correct numbers beat fluent phrasing, so the model is kept out of
+that path and the engine label says which engine actually produced the answer.
+
+If Ollama is unreachable, or a response will not parse, Relay falls back to the
+deterministic path and says so in the reasoning trail.
+
+Tested with Ollama 0.33.3 and `llama3.2` on Apple Silicon: roughly 7 seconds for
+analysis plus draft, against about 1.3 seconds for the rules engine.
 
 ---
 

@@ -52,6 +52,8 @@ interface RelayState {
 
   // Settings
   providerKey: ProviderKey
+  /** True once a person has picked an engine, which then wins over the env default. */
+  providerChosenByUser: boolean
   localProviderAvailable: boolean | null
   signedIn: boolean
   seededAt: string
@@ -164,6 +166,7 @@ export const useRelayStore = create<RelayState>()(
       return {
         ...seedState(),
         providerKey: defaultProviderKey,
+        providerChosenByUser: false,
         localProviderAvailable: null,
         signedIn: false,
         pending: {},
@@ -182,7 +185,7 @@ export const useRelayStore = create<RelayState>()(
         },
 
         setProviderKey: async (key) => {
-          set({ providerKey: key })
+          set({ providerKey: key, providerChosenByUser: true })
           const available = await createProvider(key).isAvailable()
           set((state) => ({
             localProviderAvailable: key === 'ollama' ? available : state.localProviderAvailable,
@@ -419,6 +422,19 @@ export const useRelayStore = create<RelayState>()(
     {
       name: 'relay-demo-state',
       version: 1,
+      /**
+       * A persisted engine choice should only survive if a person actually made
+       * one. Otherwise the first visit's default would be frozen into storage
+       * and later changes to VITE_AI_PROVIDER would be silently ignored.
+       */
+      merge: (persisted, current) => {
+        const saved = (persisted ?? {}) as Partial<RelayState>
+        return {
+          ...current,
+          ...saved,
+          providerKey: saved.providerChosenByUser ? (saved.providerKey ?? current.providerKey) : current.providerKey,
+        }
+      },
       partialize: (state) => ({
         customers: state.customers,
         enquiries: state.enquiries,
@@ -432,6 +448,7 @@ export const useRelayStore = create<RelayState>()(
         briefing: state.briefing,
         answers: state.answers,
         providerKey: state.providerKey,
+        providerChosenByUser: state.providerChosenByUser,
         signedIn: state.signedIn,
         seededAt: state.seededAt,
       }),
