@@ -129,7 +129,7 @@ export function ActivityLogPage() {
                         {activity.detail && (
                           <p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-500">{activity.detail}</p>
                         )}
-                        <p className="mt-1 text-[11px] text-ink-300">
+                        <p className="mt-1 text-[11px] text-ink-400">
                           {ACTOR_LABEL[activity.actor]} · {relativeTime(activity.at)}
                         </p>
                       </div>

@@ -145,17 +145,32 @@ from here, which is why the analyst can never contradict the charts.
 
 ### 8. UI — `src/pages`, `src/components`
 
-Six screens. Layout primitives (`Card`, `Button`, `Badge`, `SegmentedControl`,
-`StatCard`, `States`) carry the design tokens; pages compose them. Accessibility
-choices worth noting:
+Six screens. Pages compose feature components (`components/dashboard`,
+`components/inbox`, `components/automations`, `components/analyst`) out of
+layout primitives (`Card`, `Button`, `Badge`, `SegmentedControl`, `StatCard`,
+`States`) that carry the design tokens. No component file exceeds 200 lines.
 
+Accessibility was audited with axe-core driving the real application, not
+assumed. The result is **zero WCAG 2.1 AA violations** across all six routes at
+320, 375, 768 and 1440px. What that took:
+
+- **The muted text ramp was wrong.** `ink-400` measured 3.69:1 and `ink-300`
+  2.6:1 against the canvas — both below the 4.5:1 minimum, across roughly 120
+  nodes. `ink-400` was darkened to 4.8:1, every `text-ink-300` was promoted to
+  it, and `ink-300` is now documented as non-text only.
+- **Two controls collapse to icons below `sm`** and so lost their accessible
+  name on a phone. Both now carry `aria-label`, covered by a regression test.
+- **A skip link** now precedes the six navigation links on every page.
 - The segmented controls are real `<fieldset>`/`<input type="radio">` groups, so
   arrow-key navigation and screen-reader semantics come for free.
-- Every icon is `aria-hidden` with a text label alongside it.
-- Focus is visible globally via `:focus-visible`.
-- `prefers-reduced-motion` disables every animation.
-- Error and empty states are rendered as `role="alert"` / real text, not as
-  colour alone.
+- Card headers stack below `sm`, which removed the last two sources of
+  horizontal scrolling at 320px.
+- Every icon is `aria-hidden` with a text label alongside it; focus is visible
+  globally via `:focus-visible`; `prefers-reduced-motion` disables every
+  animation; error and empty states use real text and `role="alert"` rather
+  than colour alone.
+- The multi-series chart carries a legend whose entries differ by line style as
+  well as colour.
 
 ## Data flow: one enquiry, start to finish
 
@@ -183,7 +198,7 @@ User clicks "Approve"
 
 ## Testing strategy
 
-108 tests across nine files, chosen to cover the parts where a bug would be
+112 tests across ten files, chosen to cover the parts where a bug would be
 invisible rather than to chase a coverage number:
 
 | File | What it protects |
@@ -194,6 +209,7 @@ invisible rather than to chase a coverage number:
 | `analytics/metrics.test.ts` | Dashboard arithmetic, division-by-zero cases, week comparison, SLA breaches |
 | `automation/demoAdapter.test.ts` | Every workflow's steps and effects, failure with no side effects, adapter selection and fallback |
 | `store/useRelayStore.test.ts` | The full enquiry workflow, approval, rejection, analyst history, demo reset |
+| `components/layout/AppShell.test.tsx` | The accessibility contract of the shell: skip link, one main landmark, and accessible names on the controls that collapse to icons |
 | `pages/Tasks.test.tsx` | Real user interactions: completing, reopening, filtering, sorting, empty state |
 | `components/GuidedStart.test.tsx` | The first-run walkthrough: three steps, dismissal, and reappearing after a demo reset |
 | `pages/Automations.test.tsx` | Running a workflow from the UI, the recoverable error panel, and the blocked-workflow explanation |

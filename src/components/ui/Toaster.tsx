@@ -41,7 +41,7 @@ export function Toaster() {
             <button
               type="button"
               onClick={() => dismiss(toast.id)}
-              className="-m-1 h-fit rounded p-1 text-ink-300 transition-colors hover:text-ink-700"
+              className="-m-1 h-fit rounded p-1 text-ink-400 transition-colors hover:text-ink-700"
               aria-label="Dismiss notification"
             >
               <X aria-hidden className="size-3.5" />

@@ -8,11 +8,14 @@
   --color-surface: #ffffff;
   --color-raised: #fbfbfd;
 
-  --color-ink-900: #0d1117;
-  --color-ink-700: #303743;
-  --color-ink-500: #5b6472;
-  --color-ink-400: #79818f;
-  --color-ink-300: #9aa1ad;
+  /* Text ramp. Every tier used for text clears WCAG AA (4.5:1) against the
+     lightest surface it sits on; ink-300 is deliberately below that and is
+     reserved for non-text use — status dots, dividers, decorative icons. */
+  --color-ink-900: #0d1117; /* 15.9:1 on canvas */
+  --color-ink-700: #303743; /* 11.3:1 */
+  --color-ink-500: #5b6472; /*  5.6:1 */
+  --color-ink-400: #666e7c; /*  4.8:1 — smallest text tier */
+  --color-ink-300: #9aa1ad; /*  2.5:1 — NOT for text */
 
   --color-line: #e6e8ec;
   --color-line-strong: #d3d7de;

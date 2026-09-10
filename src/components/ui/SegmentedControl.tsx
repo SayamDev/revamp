@@ -49,7 +49,7 @@ export function SegmentedControl<T extends string>({
             />
             {option.label}
             {option.count !== undefined && (
-              <span className={cn('tabular ml-1.5 text-[12px]', active ? 'text-ink-400' : 'text-ink-300')}>
+              <span className={cn('tabular ml-1.5 text-[12px]', active ? 'text-ink-400' : 'text-ink-400')}>
                 {option.count}
               </span>
             )}

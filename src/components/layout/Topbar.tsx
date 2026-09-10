@@ -24,6 +24,7 @@ function ProviderSwitch() {
       <Button
         size="sm"
         variant="ghost"
+        aria-label={`Switch to ${isLocal ? 'Demo AI' : 'Local AI'}`}
         onClick={async () => {
           const next = isLocal ? 'demo' : 'ollama'
           await setProviderKey(next)
@@ -37,7 +38,6 @@ function ProviderSwitch() {
       >
         <RefreshCw aria-hidden className="size-3.5 sm:hidden" />
         <span className="hidden sm:inline">Switch to {isLocal ? 'Demo AI' : 'Local AI'}</span>
-        <span className="sr-only sm:hidden">Switch to {isLocal ? 'Demo AI' : 'Local AI'}</span>
       </Button>
     </div>
   )
@@ -49,7 +49,12 @@ function ResetControl() {
 
   if (!confirming) {
     return (
-      <Button size="sm" variant="secondary" onClick={() => setConfirming(true)}>
+      <Button
+        size="sm"
+        variant="secondary"
+        aria-label="Reset demo data"
+        onClick={() => setConfirming(true)}
+      >
         <RotateCcw aria-hidden className="size-3.5" />
         <span className="hidden sm:inline">Reset demo</span>
       </Button>

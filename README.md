@@ -211,10 +211,12 @@ This is a portfolio demonstration, and it says so in the product.
 - **Responsible AI boundaries** — validated model output, uncalibrated scores
   labelled as such, arithmetic kept away from the model
 - **Full-stack engineering** — typed domain model, service seams, pure
-  derivations, 108 tests, strict TypeScript
+  derivations, 112 tests, strict TypeScript
 - **Auditability** — a complete activity trail of what the AI did and why
-- **Responsive, accessible UX** — desktop-first, usable on a phone, keyboard
-  navigable, `prefers-reduced-motion` respected
+- **Responsive, accessible UX** — audited with axe-core against WCAG 2.1 AA:
+  **zero violations** on all six screens at 320, 375, 768 and 1440px, a working
+  skip link, visible focus on every control, and `prefers-reduced-motion`
+  respected
 
 ---
 

@@ -21,11 +21,19 @@ function DemoBanner() {
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh">
+      {/* Six navigation links precede the content on every page; this lets a
+          keyboard or screen-reader user step over them. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:border focus:border-line-strong focus:bg-surface focus:px-3 focus:py-2 focus:text-[13px] focus:font-medium focus:text-ink-900 focus:shadow-[var(--shadow-raised)]"
+      >
+        Skip to main content
+      </a>
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <DemoBanner />
         <Topbar />
-        <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8">
+        <main id="main-content" tabIndex={-1} className="flex-1 px-4 py-6 sm:px-6 sm:py-8">
           <div className="mx-auto w-full max-w-[1180px]">
             <ErrorBoundary>{children}</ErrorBoundary>
           </div>
