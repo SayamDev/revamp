@@ -72,6 +72,10 @@
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
+    /* Grid and flex children default to min-width:auto, which lets long
+       content push a card wider than its column. Cards always truncate
+       instead. */
+    min-width: 0;
   }
 
   .skeleton {
