@@ -66,6 +66,29 @@ describe('enquiry workflow', () => {
   })
 })
 
+describe('failure handling', () => {
+  it('surfaces an error and changes nothing when a workflow cannot run', async () => {
+    const enquiriesBefore = store().enquiries
+    const tasksBefore = store().tasks.length
+
+    await store().runAutomation('new_enquiry', {})
+
+    expect(store().pending['automation:new_enquiry'].status).toBe('error')
+    expect(store().pending['automation:new_enquiry'].error).toBeTruthy()
+    expect(store().runs[0].status).toBe('failed')
+    expect(store().enquiries).toEqual(enquiriesBefore)
+    expect(store().tasks).toHaveLength(tasksBefore)
+  })
+
+  it('clears a previous error once a run succeeds', async () => {
+    await store().runAutomation('new_enquiry', {})
+    expect(store().pending['automation:new_enquiry'].status).toBe('error')
+
+    await store().analyseEnquiry('enq_1')
+    expect(store().pending['automation:new_enquiry'].status).toBe('idle')
+  })
+})
+
 describe('analyst', () => {
   it('keeps answers in history, newest first', async () => {
     await store().askAnalyst('Why did sales drop this week?')

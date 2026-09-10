@@ -40,7 +40,7 @@ on the dashboard.
 - **Human-in-the-loop AI** — nothing is sent, escalated or closed without an
   explicit approval, and rejections are recorded too
 - **Full-stack engineering** — typed domain model, service seams, pure
-  derivations, 83 tests, strict TypeScript
+  derivations, 89 tests, strict TypeScript
 - **Data-driven decision support** — every dashboard figure is derived from
   state, so actions in the app change what the CEO sees
 - **Auditability** — a complete activity trail of what the AI did and why
