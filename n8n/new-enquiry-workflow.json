@@ -1,0 +1,83 @@
+{
+  "id": "RelayNewEnquiry1",
+  "name": "Relay \u2014 new enquiry",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "relay-enquiry",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "b1f0f5a2-0001-4a00-9000-relayenquiry01",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "relay-enquiry"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Relay \u2014 new enquiry workflow (n8n Code node)\n//\n// A faithful port of the deterministic rules in src/ai/rules.ts. It returns the\n// same { steps, effects } contract the app's local workflow engine produces, so\n// Relay behaves identically whether this runs here or in the browser.\n\nconst payload = $json.body ?? $json;\nconst enquiry = payload.input?.enquiry;\n\nif (!enquiry) {\n  return [{ json: { steps: [{ name: 'Webhook', status: 'failed', detail: 'No enquiry in payload' }], effects: [] } }];\n}\n\nconst text = `${enquiry.subject}\\n${enquiry.body}`;\nconst hay = text.toLowerCase().replace(/\\s+/g, ' ');\nconst now = new Date().toISOString();\n\nconst CATEGORIES = [\n  { category: 'sales_enquiry', label: 'Sales enquiry', keywords: [['quote',3],['pricing',3],['price',2],['cost',2],['proposal',3],['redesign',2],['new website',3],['project',1],['budget',3],['looking for help',3],['interested in',2],['engage',2],['statement of work',3],['rfp',3],['tender',3],['scope',1]] },\n  { category: 'support_issue', label: 'Support issue', keywords: [['broken',3],['not working',4],['error',3],['bug',3],['outage',5],['down',3],['cannot',2],[\"can't\",2],['failing',3],['crash',4],['urgent',2],['issue',2],['fault',3],['timeout',3],['503',4],['data loss',5],['locked out',4]] },\n  { category: 'billing_question', label: 'Billing question', keywords: [['invoice',4],['billing',4],['overcharged',5],['refund',4],['payment',3],['vat',3],['receipt',3],['direct debit',4],['subscription renewal',3],['purchase order',3]] },\n  { category: 'partnership', label: 'Partnership enquiry', keywords: [['partnership',5],['partner',3],['reseller',4],['referral',3],['collaborate',3],['white label',4],['integration partner',4]] },\n  { category: 'recruitment', label: 'Recruitment', keywords: [['cv',4],['resume',4],['vacancy',4],['job',3],['role',1],['apply',3],['application for',3],['hiring',3],['portfolio',2]] },\n];\n\nconst scores = CATEGORIES.map((entry) => {\n  const matched = entry.keywords.filter(([word]) => hay.includes(word));\n  return { category: entry.category, label: entry.label, matched: matched.map(([w]) => w), score: matched.reduce((t, [, w]) => t + w, 0) };\n}).sort((a, b) => b.score - a.score || a.category.localeCompare(b.category));\n\nconst best = scores[0].score === 0 ? { category: 'general', label: 'General enquiry', score: 0, matched: [] } : scores[0];\n\nconst URGENCY = [['urgent',3],['asap',3],['immediately',3],['critical',4],['outage',4],['down',2],['deadline',2],['escalate',3],['losing',2],['blocked',2],['today',2],['emergency',4],['production',2],['data loss',4]];\nconst urgencyMatched = URGENCY.filter(([word]) => hay.includes(word));\nconst urgency = urgencyMatched.reduce((t, [, w]) => t + w, 0);\n\nconst employeeMatch = hay.match(/(?:around |about |approximately |roughly |over |we have )?(\\d[\\d,]*)\\s*(?:\\+)?\\s*(?:employees|staff|people|headcount|seats|users)/);\nconst employees = employeeMatch ? Number(employeeMatch[1].replace(/,/g, '')) : null;\n\nconst MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];\nconst monthHit = MONTHS.find((m) => hay.includes(m));\nconst quarterMatch = hay.match(/\\bq([1-4])\\b/);\nlet deadline = monthHit ? monthHit[0].toUpperCase() + monthHit.slice(1) : null;\nif (!deadline && quarterMatch) deadline = `Q${quarterMatch[1]}`;\nif (!deadline && /(asap|as soon as possible|immediately)/.test(hay)) deadline = 'Immediate';\n\nconst SERVICES = [\n  [/website redesign|redesign(ing)? (our|the|your)? ?website|site redesign/, 'Website redesign', 9000],\n  [/e-?commerce|online (shop|store)|checkout/, 'E-commerce build', 22000],\n  [/mobile app|ios app|android app/, 'Mobile application', 30000],\n  [/brand(ing)?|logo|identity/, 'Brand identity', 7000],\n  [/seo|search engine/, 'SEO engagement', 6000],\n  [/migration|migrate/, 'Platform migration', 18000],\n  [/support (contract|retainer)|maintenance/, 'Support retainer', 12000],\n  [/integration|api work/, 'Systems integration', 14000],\n];\nconst serviceHit = SERVICES.find(([pattern]) => pattern.test(hay));\nconst service = serviceHit ? serviceHit[1] : null;\n\nconst budgetMatch = hay.match(/(?:\u00a3|gbp\\s?)([\\d,]+)(?:\\s*(?:k|,000))?/);\nconst companyMatch = text.match(/\\b([A-Z][A-Za-z&.'-]*(?:\\s+[A-Z][A-Za-z&.'-]*)*)\\s+(Ltd|Limited|LLP|PLC|Group|Holdings|Partners)\\b/);\n\nconst extracted = {\n  company: companyMatch ? `${companyMatch[1]} ${companyMatch[2]}` : (enquiry.company ?? null),\n  employees,\n  service,\n  deadline,\n  budget: budgetMatch ? budgetMatch[0].trim() : null,\n  location: null,\n};\n\nlet estimatedValue = null;\nif (best.category === 'sales_enquiry' || best.category === 'partnership') {\n  const base = serviceHit ? serviceHit[2] : 8000;\n  const size = employees ?? 40;\n  const multiplier = size >= 500 ? 2.4 : size >= 250 ? 1.9 : size >= 100 ? 1.35 : size >= 25 ? 1 : 0.7;\n  const mid = base * multiplier;\n  const round500 = (n) => Math.round(n / 500) * 500;\n  estimatedValue = { min: round500(mid * 0.8), max: round500(mid * 1.2) };\n}\n\nlet points = urgency;\nif (best.category === 'support_issue') points += 2;\nif (best.category === 'billing_question') points += 1;\nif (best.category === 'recruitment') points -= 2;\nconst maxValue = estimatedValue ? estimatedValue.max : 0;\nif (maxValue >= 25000) points += 4; else if (maxValue >= 10000) points += 3; else if (maxValue >= 4000) points += 1;\nif ((employees ?? 0) >= 250) points += 2; else if ((employees ?? 0) >= 100) points += 1;\nif (enquiry.customerId) points += 1;\nif (deadline) points += 1;\n\nconst priority = points >= 9 ? 'urgent' : points >= 5 ? 'high' : points >= 2 ? 'medium' : 'low';\nconst SLA = { urgent: 1, high: 4, medium: 24, low: 72 };\nconst slaHours = SLA[priority];\n\nconst INTENTS = {\n  sales_enquiry: 'Requesting pricing and availability for a new engagement',\n  support_issue: 'Reporting a problem with a live service',\n  billing_question: 'Querying an invoice or payment',\n  partnership: 'Proposing a commercial partnership',\n  recruitment: 'Applying for a role',\n  general: 'General contact \u2014 intent unclear from the message',\n};\n\nconst ACTIONS = {\n  sales_enquiry: `Contact within ${slaHours} hours with an indicative price and a discovery call slot.`,\n  support_issue: `Acknowledge within ${slaHours} hours and assign to support triage.`,\n  billing_question: `Route to finance and confirm the invoice position within ${slaHours} hours.`,\n  partnership: 'Send the partner overview pack and book an introductory call.',\n  recruitment: 'Forward to the hiring inbox. No commercial follow-up needed.',\n  general: `Reply within ${slaHours} hours to clarify what the sender needs.`,\n};\n\nconst margin = best.score - (scores[1] ? scores[1].score : 0);\nconst confidence = best.score === 0\n  ? 0.42\n  : Math.round(Math.min(0.55 + Math.min(margin / 8, 1) * 0.3 + Math.min(best.matched.length / 4, 1) * 0.14, 0.97) * 100) / 100;\n\nconst reasoning = [];\nif (best.matched.length) reasoning.push(`Matched ${best.matched.length} ${best.label.toLowerCase()} signals: ${best.matched.slice(0, 4).join(', ')}.`);\nif (urgencyMatched.length) reasoning.push(`Urgency language detected: ${urgencyMatched.slice(0, 3).map(([w]) => w).join(', ')}.`);\nif (employees) reasoning.push(`Company size of ${employees} staff raises the expected deal band.`);\nif (deadline) reasoning.push(`A target of ${deadline} was stated, which adds time pressure.`);\nreasoning.push('Executed by n8n.');\n\nconst analysis = {\n  category: best.category,\n  categoryLabel: best.label,\n  intent: INTENTS[best.category],\n  priority,\n  confidence,\n  estimatedValue,\n  slaHours,\n  recommendedAction: ACTIONS[best.category],\n  reasoning,\n  extracted,\n  providerId: 'n8n',\n  analysedAt: now,\n};\n\nconst OWNERS = { sales_enquiry: 'Priya Raman', support_issue: 'Tom Beckett', billing_question: 'Dana Fowler', partnership: 'Alex Whitmore', recruitment: 'Hiring inbox', general: 'Alex Whitmore' };\nconst id = (prefix) => `${prefix}_n8n_${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;\n\nconst task = {\n  id: id('task'),\n  title: `Follow up with ${extracted.company ?? enquiry.company}`,\n  detail: analysis.recommendedAction,\n  priority,\n  assignee: OWNERS[best.category],\n  dueAt: new Date(Date.now() + slaHours * 3600000).toISOString(),\n  source: 'n8n enquiry workflow',\n  status: 'open',\n  linkedEnquiryId: enquiry.id,\n  createdAt: now,\n  completedAt: null,\n};\n\nconst firstName = String(enquiry.senderName || 'there').split(' ')[0];\nconst money = (n) => `\u00a3${n.toLocaleString('en-GB')}`;\nconst draftLines = [`Hi ${firstName},`, ''];\nif (best.category === 'sales_enquiry') {\n  draftLines.push(\n    `Thanks for getting in touch about ${service ? service.toLowerCase() : 'your project'}${extracted.company ? ` at ${extracted.company}` : ''}. It sounds like a good fit for the work we do.`, '',\n    estimatedValue ? `\u2022 Indicative range: projects of this shape typically land between ${money(estimatedValue.min)} and ${money(estimatedValue.max)}, confirmed after a scoping call.` : '\u2022 Indicative range: confirmed after a scoping call.',\n    '\u2022 Next step: a 30-minute discovery call to confirm scope, integrations and success measures.',\n    `\u2022 Timeline: ${deadline ? `we can work back from ${deadline}` : 'we can share an outline schedule after the call'}.`, '',\n    'Would either of the next two working days suit you for that call?');\n} else if (best.category === 'support_issue') {\n  draftLines.push(`Thanks for flagging this, and sorry for the disruption. I have logged it as a ${priority} priority issue and it is with our team now.`, '', `\u2022 We will confirm the cause within ${slaHours} hour${slaHours === 1 ? '' : 's'}.`, '\u2022 I will write to you again as soon as we have a fix or a workaround.');\n} else {\n  draftLines.push('Thanks for getting in touch. I have passed this to the right team and someone will come back to you shortly.');\n}\ndraftLines.push('', 'Best regards,', 'Alex Whitmore', 'Northwind Studio');\n\nconst draft = {\n  body: draftLines.join('\\n'),\n  tone: best.category === 'sales_enquiry' ? 'consultative' : best.category === 'support_issue' || best.category === 'billing_question' ? 'apologetic' : 'professional',\n  generatedAt: now,\n  providerId: 'n8n',\n  approved: false,\n  edited: false,\n};\n\nconst activity = (kind, message, detail) => ({\n  type: 'activity',\n  activity: { id: id('act'), at: new Date().toISOString(), kind, actor: 'automation', message, detail, entityId: enquiry.id },\n});\n\nconst effects = [\n  { type: 'enquiry_analysed', enquiryId: enquiry.id, analysis },\n  activity('ai_analysis', `n8n classified enquiry from ${enquiry.company} as ${best.label}`, analysis.intent),\n  activity('ai_analysis', `Priority set to ${priority.toUpperCase()}`, `Respond within ${slaHours}h`),\n  activity('ai_extraction', 'Customer information extracted', Object.entries(extracted).filter(([, v]) => v !== null).map(([k, v]) => `${k}: ${v}`).join(', ')),\n  { type: 'task_created', task },\n  activity('task_created', `Follow-up task created: ${task.title}`, `Assigned to ${task.assignee}`),\n  { type: 'draft_generated', enquiryId: enquiry.id, draft },\n  activity('draft_generated', `Response draft generated for ${enquiry.company}`, `Tone: ${draft.tone}`),\n  { type: 'enquiry_status', enquiryId: enquiry.id, status: 'awaiting_approval' },\n  activity('approval_pending', 'Awaiting human approval', 'No message is sent until a person approves the draft.'),\n];\n\nconst steps = [\n  { name: 'Analyse with AI', status: 'success', detail: `Classified as ${best.label}` },\n  { name: 'Determine priority', status: 'success', detail: `${priority.toUpperCase()} \u2014 respond within ${slaHours}h` },\n  { name: 'Extract customer information', status: 'success', detail: `${Object.values(extracted).filter((v) => v !== null).length} fields found` },\n  { name: 'Create follow-up task', status: 'success', detail: `Assigned to ${task.assignee}` },\n  { name: 'Generate response', status: 'success', detail: `${draft.tone} draft` },\n  { name: 'Write activity log', status: 'success', detail: `${effects.filter((e) => e.type === 'activity').length} entries recorded` },\n];\n\nreturn [{ json: { steps, effects } }];\n"
+      },
+      "id": "b1f0f5a2-0002-4a00-9000-relayenquiry02",
+      "name": "Analyse enquiry",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "b1f0f5a2-0003-4a00-9000-relayenquiry03",
+      "name": "Return result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyse enquiry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse enquiry": {
+      "main": [
+        [
+          {
+            "node": "Return result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}
