@@ -3,7 +3,7 @@
  *
  * Posts the trigger payload to a local n8n webhook and expects the workflow to
  * return the same `AutomationEffect[]` shape the local engine produces, so the
- * rest of Relay behaves identically either way. The bundled workflow export in
+ * rest of Revamp behaves identically either way. The bundled workflow export in
  * `n8n/new-enquiry-workflow.json` does exactly that.
  *
  * If n8n is not running, `AutomationService` falls back to the local engine.

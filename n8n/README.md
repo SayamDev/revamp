@@ -1,6 +1,6 @@
 # Optional: running the workflow in n8n
 
-Relay ships with its own local workflow engine, so **none of this is required**. The
+Revamp ships with its own local workflow engine, so **none of this is required**. The
 public demo and `npm run dev` both work with nothing installed. This directory
 exists to show the same workflow executing in a real automation platform.
 
@@ -9,13 +9,13 @@ exists to show the same workflow executing in a real automation platform.
 `AutomationService` talks to an adapter interface, not to a workflow engine:
 
 ```
-Relay UI → AutomationService → AutomationAdapter → local engine  (default)
+Revamp UI → AutomationService → AutomationAdapter → local engine  (default)
                                                  → n8n webhook   (optional)
 ```
 
 Both adapters return the same `{ steps, effects }` payload, so the audit trail,
 tasks and drafts come out identical either way. If n8n is configured but not
-reachable — or a run fails — Relay falls back to the local engine and records
+reachable — or a run fails — Revamp falls back to the local engine and records
 that it did.
 
 ## Requirements
@@ -43,7 +43,7 @@ Webhook (POST /webhook/relay-enquiry)
         ↓
 Analyse enquiry (Code node — classify, prioritise, extract, task, draft)
         ↓
-Return result (steps + effects back to Relay)
+Return result (steps + effects back to Revamp)
 ```
 
 The Code node is a direct port of `src/ai/rules.ts`, so n8n reaches the same
@@ -53,9 +53,9 @@ classification and priority as the app does.
 
 Toggle the workflow **Active**. This is what publishes the production webhook at
 `http://localhost:5678/webhook/relay-enquiry`. The editor's "Test workflow"
-URL (`/webhook-test/...`) only fires once per click and is not what Relay uses.
+URL (`/webhook-test/...`) only fires once per click and is not what Revamp uses.
 
-## 4. Point Relay at it
+## 4. Point Revamp at it
 
 Create `.env.development.local` in the project root (development only, so a
 production build never points at your laptop):
@@ -79,5 +79,5 @@ docker compose -f n8n/docker-compose.yml down
 
 The deployed demo is a static site on GitHub Pages. It cannot reach a webhook on
 your laptop, and exposing one publicly would mean a tunnel or a paid host.
-Relay is built so that this is a configuration detail rather than a dependency:
+Revamp is built so that this is a configuration detail rather than a dependency:
 the hosted demo runs the local engine, and your machine can run the real thing.

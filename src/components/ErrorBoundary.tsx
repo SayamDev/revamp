@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error('Relay caught a render error', error, info.componentStack)
+    console.error('Revamp caught a render error', error, info.componentStack)
   }
 
   override render(): ReactNode {
@@ -35,7 +35,7 @@ export class ErrorBoundary extends Component<Props, State> {
           {this.props.fallbackTitle ?? 'This section could not be displayed'}
         </h2>
         <p className="mt-1.5 max-w-md text-[13px] leading-relaxed text-ink-500">
-          Something went wrong while rendering this part of the page. The rest of Relay is still usable.
+          Something went wrong while rendering this part of the page. The rest of Revamp is still usable.
         </p>
         <Button className="mt-4" onClick={() => this.setState({ hasError: false })}>
           Try again

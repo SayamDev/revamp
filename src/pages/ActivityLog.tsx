@@ -15,7 +15,7 @@ import type { LucideIcon } from 'lucide-react'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/States'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import type { Activity, ActivityKind } from '@/types'
 import { formatTime, relativeTime } from '@/lib/time'
 import { cn } from '@/lib/cn'
@@ -63,7 +63,7 @@ function groupByDay(activities: Activity[]): [string, Activity[]][] {
 }
 
 export function ActivityLogPage() {
-  const activities = useRelayStore((state) => state.activities)
+  const activities = useRevampStore((state) => state.activities)
   const [filter, setFilter] = useState<Filter>('all')
 
   const visible = useMemo(
@@ -99,7 +99,7 @@ export function ActivityLogPage() {
       />
 
       {visible.length === 0 ? (
-        <EmptyState title="Nothing recorded yet" description="Actions taken in Relay appear here immediately." />
+        <EmptyState title="Nothing recorded yet" description="Actions taken in Revamp appear here immediately." />
       ) : (
         <div className="px-5 py-4">
           {grouped.map(([day, entries]) => (

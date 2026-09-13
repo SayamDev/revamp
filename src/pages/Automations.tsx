@@ -7,11 +7,11 @@ import { AutomationCard } from '@/components/automations/AutomationCard'
 import { N8N_CONFIGURED } from '@/automation/config'
 import { AUTOMATION_LIST } from '@/automation/definitions'
 import type { AutomationId } from '@/automation/types'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { relativeTime } from '@/lib/time'
 
 export function AutomationsPage() {
-  const runs = useRelayStore((state) => state.runs)
+  const runs = useRevampStore((state) => state.runs)
   const totalDuration = useMemo(
     () => runs.reduce((total, run) => total + run.durationMs, 0),
     [runs],
@@ -27,10 +27,10 @@ export function AutomationsPage() {
               Workflows run on the local engine by default
             </p>
             <p className="mt-1 text-[13px] leading-relaxed text-ink-500">
-              Relay executes these steps in-process, so the demo works with no external services and no running
+              Revamp executes these steps in-process, so the demo works with no external services and no running
               cost.{' '}
               {N8N_CONFIGURED
-                ? 'An n8n webhook is configured: if it is reachable, n8n executes the workflow instead and Relay falls back automatically if it is not.'
+                ? 'An n8n webhook is configured: if it is reachable, n8n executes the workflow instead and Revamp falls back automatically if it is not.'
                 : 'An n8n instance can be plugged in behind the same interface — see the README for the Docker setup.'}
             </p>
           </div>

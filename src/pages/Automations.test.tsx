@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AutomationsPage } from './Automations'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 describe('AutomationsPage', () => {
   it('lists the three workflows with their triggers and steps', () => {
@@ -21,12 +21,12 @@ describe('AutomationsPage', () => {
     await user.click(screen.getAllByRole('button', { name: /run now/i })[2])
 
     expect(await screen.findByText(/1 run in this session/)).toBeInTheDocument()
-    expect(useRelayStore.getState().briefing).not.toBeNull()
+    expect(useRevampStore.getState().briefing).not.toBeNull()
   })
 
   it('shows a recoverable error panel when a run fails', async () => {
     // A new-enquiry run with no enquiry is the failure the adapter guards.
-    await useRelayStore.getState().runAutomation('new_enquiry', {})
+    await useRevampStore.getState().runAutomation('new_enquiry', {})
 
     render(<AutomationsPage />)
 
@@ -37,8 +37,8 @@ describe('AutomationsPage', () => {
   })
 
   it('explains why a workflow cannot run instead of failing silently', async () => {
-    const store = useRelayStore.getState()
-    useRelayStore.setState({ enquiries: store.enquiries.map((e) => ({ ...e, analysis: {} as never })) })
+    const store = useRevampStore.getState()
+    useRevampStore.setState({ enquiries: store.enquiries.map((e) => ({ ...e, analysis: {} as never })) })
 
     render(<AutomationsPage />)
 

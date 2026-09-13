@@ -61,7 +61,7 @@ export interface RecommendedAction {
 }
 
 /**
- * The single seam between Relay and any model.
+ * The single seam between Revamp and any model.
  *
  * Everything above this interface is deterministic application logic; anything
  * below it may be a rules engine, a local model, or a hosted API. The UI never

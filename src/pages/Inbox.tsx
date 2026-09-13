@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/States'
 import { EnquiryList, type InboxFilter } from '@/components/inbox/EnquiryList'
 import { EnquiryDetail } from '@/components/inbox/EnquiryDetail'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 const matchesFilter = (status: string, filter: InboxFilter) =>
   filter === 'all' ? true : status === filter
@@ -13,7 +13,7 @@ const matchesFilter = (status: string, filter: InboxFilter) =>
  * enquiry replaces the list, and the detail view offers a way back.
  */
 export function InboxPage() {
-  const enquiries = useRelayStore((state) => state.enquiries)
+  const enquiries = useRevampStore((state) => state.enquiries)
   const [selectedId, setSelectedId] = useState<string | null>(enquiries[0]?.id ?? null)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<InboxFilter>('all')

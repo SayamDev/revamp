@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge, PriorityBadge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/States'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { toast } from '@/store/toastStore'
 import { sortByPriority } from '@/analytics/metrics'
 import { dueLabel } from '@/lib/time'
@@ -15,9 +15,9 @@ type Filter = 'open' | 'done' | 'all'
 type Sort = 'priority' | 'due'
 
 export function TasksPage() {
-  const tasks = useRelayStore((state) => state.tasks)
-  const completeTask = useRelayStore((state) => state.completeTask)
-  const reopenTask = useRelayStore((state) => state.reopenTask)
+  const tasks = useRevampStore((state) => state.tasks)
+  const completeTask = useRevampStore((state) => state.completeTask)
+  const reopenTask = useRevampStore((state) => state.reopenTask)
 
   const [filter, setFilter] = useState<Filter>('open')
   const [sort, setSort] = useState<Sort>('priority')

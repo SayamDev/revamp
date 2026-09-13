@@ -1,5 +1,5 @@
 /**
- * Relay domain model.
+ * Revamp domain model.
  *
  * All data in the shipped demo is fictional. See `src/data/seed.ts`.
  */

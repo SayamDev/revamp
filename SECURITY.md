@@ -1,12 +1,12 @@
 # Security
 
-Relay is a portfolio demonstration, but it is built the way a real product
+Revamp is a portfolio demonstration, but it is built the way a real product
 should be. This document records the decisions rather than claiming a security
 posture the project does not have.
 
 ## Threat model in one line
 
-Relay is a **static, client-only application with no backend, no accounts and no
+Revamp is a **static, client-only application with no backend, no accounts and no
 real personal data**. There is no server to compromise, no database to exfiltrate
 and no credential to steal. Most of the security work therefore went into
 keeping it that way.
@@ -43,7 +43,7 @@ deployed page makes **no third-party network requests at all**.
 
 There is deliberately none. The entry screen is a **demo gate, not
 authentication**: it frames the demo and makes the fictional nature of the data
-unmissable before anyone sees a dashboard. Because Relay stores no personal data
+unmissable before anyone sees a dashboard. Because Revamp stores no personal data
 and exposes no privileged operation, adding a login would create the appearance
 of protection without protecting anything.
 

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { NAV_ITEMS } from './nav'
 import { cn } from '@/lib/cn'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 function Logo() {
   return (
@@ -12,7 +12,7 @@ function Logo() {
       >
         R
       </span>
-      <span className="text-[15px] font-semibold tracking-[-0.015em] text-ink-900">Relay</span>
+      <span className="text-[15px] font-semibold tracking-[-0.015em] text-ink-900">Revamp</span>
     </div>
   )
 }
@@ -20,10 +20,10 @@ function Logo() {
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   // Two primitive selectors rather than one object selector: zustand compares
   // by reference, so returning a fresh object here would re-render every tick.
-  const inboxCount = useRelayStore(
+  const inboxCount = useRevampStore(
     (state) => state.enquiries.filter((e) => e.status === 'new' || e.status === 'awaiting_approval').length,
   )
-  const taskCount = useRelayStore((state) => state.tasks.filter((t) => t.status !== 'done').length)
+  const taskCount = useRevampStore((state) => state.tasks.filter((t) => t.status !== 'done').length)
 
   const badgeFor = (to: string) => (to === '/inbox' ? inboxCount : to === '/tasks' ? taskCount : 0)
 

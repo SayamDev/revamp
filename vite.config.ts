@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 
-// The production build is served from https://<user>.github.io/relay/, so it
-// needs a base path. Change '/relay/' if you rename the repository.
-const REPOSITORY_BASE = '/relay/'
+// The production build is served from https://<user>.github.io/revamp/, so it
+// needs a base path. Change '/revamp/' if you rename the repository.
+const REPOSITORY_BASE = '/revamp/'
 
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? REPOSITORY_BASE : '/',

@@ -1,15 +1,15 @@
-# Relay
+# Revamp
 
 **AI-powered business operations assistant.** Turn business activity into action.
 
-Relay takes the things a business already receives — enquiries, complaints,
+Revamp takes the things a business already receives — enquiries, complaints,
 weekly numbers — and turns them into prioritised, explained, auditable actions.
 A person approves anything that leaves the building.
 
-**[▶ Open the live demo](https://sayamdev.github.io/relay/)** — no sign-up, no
+**[▶ Open the live demo](https://sayamdev.github.io/revamp/)** — no sign-up, no
 API key, no install. All data is fictional.
 
-![Relay dashboard: key metrics, an AI executive briefing and recommended actions](docs/screenshots/dashboard.png)
+![Revamp dashboard: key metrics, an AI executive briefing and recommended actions](docs/screenshots/dashboard.png)
 
 ---
 
@@ -18,7 +18,7 @@ API key, no install. All data is fictional.
 The demo opens with a walkthrough on the dashboard. If you would rather skip it:
 
 1. **Inbox → ABC Ltd**, a prospect asking about a website redesign.
-2. **Run AI analysis.** Relay classifies it, sets a priority and a response
+2. **Run AI analysis.** Revamp classifies it, sets a priority and a response
    window, extracts the commercial detail, opens a follow-up task and drafts a
    reply — one workflow, six steps.
 3. **Approve** the draft. The decision is recorded and the linked task closes.
@@ -37,7 +37,7 @@ lack is the time to read it, decide what matters and act on it. An enquiry worth
 £14,000 sits in an inbox next to a CV; a production outage looks the same as a
 how-to question until someone opens it.
 
-Relay is a small, honest demonstration of closing that gap: AI reads the
+Revamp is a small, honest demonstration of closing that gap: AI reads the
 incoming work, decides what it is and how urgent it is, extracts the commercial
 detail, opens the follow-up task and drafts the reply — then stops and waits for
 a person. Every step it took is written to an audit trail, so the automation is
@@ -108,7 +108,7 @@ Approving marks the enquiry responded, closes the linked task, and writes two
 entries: the approval (noting whether the draft was edited first) and a note
 that nothing was sent to a real recipient.
 
-![The generated reply with Approve, Edit and Reject controls, above a note that Relay never sends anything on its own](docs/screenshots/approval.png)
+![The generated reply with Approve, Edit and Reject controls, above a note that Revamp never sends anything on its own](docs/screenshots/approval.png)
 
 Every one of those steps lands in the activity log, attributed to the AI, an
 automation, a person or the system:
@@ -130,7 +130,7 @@ interface only.
                         └───────────┬─────────────┘
                                     │  actions and selectors
                         ┌───────────▼─────────────┐
-                        │   Relay store (zustand) │
+                        │   Revamp store (zustand) │
                         │   + pure derivations    │
                         └─────┬──────────────┬────┘
                               │              │
@@ -245,14 +245,14 @@ makes **no third-party network requests at all**.
 Requires Node 20 or newer.
 
 ```bash
-git clone https://github.com/SayamDev/relay.git
-cd relay
+git clone https://github.com/SayamDev/revamp.git
+cd revamp
 npm install
 npm run dev
 ```
 
 Open <http://localhost:5173>. No environment file is needed — with no
-configuration at all, Relay runs in demo mode, which is the intended default.
+configuration at all, Revamp runs in demo mode, which is the intended default.
 
 | Command | What it does |
 | --- | --- |
@@ -306,7 +306,7 @@ the conversion rate increased" — contradicting the evidence rendered directly
 beneath it. Correct numbers beat fluent phrasing, so the model is kept out of
 that path.
 
-If Ollama is unreachable, or a response will not parse, Relay falls back to the
+If Ollama is unreachable, or a response will not parse, Revamp falls back to the
 deterministic path and says so in the reasoning trail.
 
 Tested with Ollama 0.33.3 and `llama3.2` on Apple Silicon: roughly 7 seconds for
@@ -320,7 +320,7 @@ analysis plus draft, against about 1.3 seconds for the rules engine.
 docker compose -f n8n/docker-compose.yml up -d
 ```
 
-Import `n8n/new-enquiry-workflow.json`, activate it, and point Relay at the
+Import `n8n/new-enquiry-workflow.json`, activate it, and point Revamp at the
 webhook. Full instructions — including why the hosted demo cannot use it — are
 in [`n8n/README.md`](n8n/README.md).
 
@@ -343,7 +343,7 @@ To deploy your own copy:
 2. **Settings → Pages → Source: GitHub Actions**.
 3. Push to `main`.
 
-If your repository is not named `relay`, change `REPOSITORY_BASE` in
+If your repository is not named `revamp`, change `REPOSITORY_BASE` in
 `vite.config.ts`. There is nothing else to provision: no server, no database, no
 secrets.
 
@@ -351,7 +351,7 @@ secrets.
 
 ## Demo credentials
 
-None. Relay has no accounts and no passwords — the entry screen is a demo gate,
+None. Revamp has no accounts and no passwords — the entry screen is a demo gate,
 not authentication, because there is nothing to protect. See
 [`SECURITY.md`](SECURITY.md).
 

@@ -1,4 +1,4 @@
-# Relay — demo script
+# Revamp — demo script
 
 A 3–5 minute walkthrough. Open the demo, then follow the eight steps below.
 
@@ -20,7 +20,7 @@ underlying data, so anything done in the app changes them.
 
 ### 2 · Today's briefing — 30 seconds
 
-> "Rather than making someone read all of that, Relay writes the summary."
+> "Rather than making someone read all of that, Revamp writes the summary."
 
 Read the three headings aloud: **what changed**, **what needs attention**,
 **opportunity**. Note the recommended actions underneath.
@@ -68,7 +68,7 @@ Scroll to the draft.
 
 Point at the approval panel before clicking.
 
-> "This is the part I care about most. Relay will not send anything on its own.
+> "This is the part I care about most. Revamp will not send anything on its own.
 > It recommends, a person decides."
 
 Click **Approve**.

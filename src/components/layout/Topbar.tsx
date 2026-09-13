@@ -5,13 +5,13 @@ import { NAV_ITEMS } from './nav'
 import { SidebarContent } from './Sidebar'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { toast } from '@/store/toastStore'
 import { cn } from '@/lib/cn'
 
 function ProviderSwitch() {
-  const providerKey = useRelayStore((state) => state.providerKey)
-  const setProviderKey = useRelayStore((state) => state.setProviderKey)
+  const providerKey = useRevampStore((state) => state.providerKey)
+  const setProviderKey = useRevampStore((state) => state.setProviderKey)
 
   const isLocal = providerKey === 'ollama'
 
@@ -28,9 +28,9 @@ function ProviderSwitch() {
         onClick={async () => {
           const next = isLocal ? 'demo' : 'ollama'
           await setProviderKey(next)
-          const nowAvailable = useRelayStore.getState().localProviderAvailable
+          const nowAvailable = useRevampStore.getState().localProviderAvailable
           if (next === 'ollama' && !nowAvailable) {
-            toast.info('Ollama not reachable', 'Relay will keep using deterministic analysis until it is running.')
+            toast.info('Ollama not reachable', 'Revamp will keep using deterministic analysis until it is running.')
           } else {
             toast.success(next === 'ollama' ? 'Local AI enabled' : 'Demo AI enabled')
           }
@@ -45,7 +45,7 @@ function ProviderSwitch() {
 
 function ResetControl() {
   const [confirming, setConfirming] = useState(false)
-  const resetDemoData = useRelayStore((state) => state.resetDemoData)
+  const resetDemoData = useRevampStore((state) => state.resetDemoData)
 
   if (!confirming) {
     return (
@@ -103,7 +103,7 @@ export function Topbar() {
 
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-[15px] font-semibold tracking-[-0.01em] text-ink-900">
-              {current?.label ?? 'Relay'}
+              {current?.label ?? 'Revamp'}
             </h1>
             <p className="hidden truncate text-[12px] text-ink-400 sm:block">{current?.description}</p>
           </div>

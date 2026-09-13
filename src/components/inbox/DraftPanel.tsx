@@ -4,16 +4,16 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { ErrorState, SkeletonLines } from '@/components/ui/States'
 import type { Enquiry } from '@/types'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { toast } from '@/store/toastStore'
 import { relativeTime } from '@/lib/time'
 
 export function DraftPanel({ enquiry }: { enquiry: Enquiry }) {
-  const regenerate = useRelayStore((state) => state.regenerateDraft)
-  const updateDraft = useRelayStore((state) => state.updateDraft)
-  const approveDraft = useRelayStore((state) => state.approveDraft)
-  const rejectDraft = useRelayStore((state) => state.rejectDraft)
-  const pending = useRelayStore((state) => state.pending[`draft:${enquiry.id}`])
+  const regenerate = useRevampStore((state) => state.regenerateDraft)
+  const updateDraft = useRevampStore((state) => state.updateDraft)
+  const approveDraft = useRevampStore((state) => state.approveDraft)
+  const rejectDraft = useRevampStore((state) => state.rejectDraft)
+  const pending = useRevampStore((state) => state.pending[`draft:${enquiry.id}`])
 
   const [editing, setEditing] = useState(false)
   const [value, setValue] = useState(enquiry.draft?.body ?? '')
@@ -117,7 +117,7 @@ export function DraftPanel({ enquiry }: { enquiry: Enquiry }) {
             <div className="min-w-0 flex-1">
               <p className="text-[13px] font-semibold text-ink-900">Human approval required</p>
               <p className="mt-1 text-[12.5px] leading-relaxed text-ink-500">
-                Relay will not send anything on its own. Approving records the decision in the audit trail and
+                Revamp will not send anything on its own. Approving records the decision in the audit trail and
                 closes the linked follow-up task. In this demo environment no message reaches a real recipient.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">

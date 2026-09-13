@@ -1,7 +1,7 @@
 /**
  * LocalAIProvider — talks to an Ollama server on the user's own machine.
  *
- * Optional. Nothing in Relay depends on it: if the server is unreachable, or a
+ * Optional. Nothing in Revamp depends on it: if the server is unreachable, or a
  * model returns something that will not parse, we fall back to the same
  * deterministic rules the demo provider uses and say so in the UI. This keeps
  * the public demo working with zero running cost while still exercising a real

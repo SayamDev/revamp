@@ -36,7 +36,7 @@ export interface AsyncState {
 
 const idle: AsyncState = { status: 'idle', error: null }
 
-interface RelayState {
+interface RevampState {
   // Data
   customers: Customer[]
   enquiries: Enquiry[]
@@ -106,7 +106,7 @@ const logActivity = (
   ...activities,
 ]
 
-export const useRelayStore = create<RelayState>()(
+export const useRevampStore = create<RevampState>()(
   persist(
     (set, get) => {
       const provider = () => createProvider(get().providerKey)
@@ -203,7 +203,7 @@ export const useRelayStore = create<RelayState>()(
               'human',
               `AI provider switched to ${key === 'ollama' ? 'Local AI (Ollama)' : 'Demo AI'}`,
               key === 'ollama' && !available
-                ? 'Ollama was not reachable — Relay will fall back to deterministic analysis.'
+                ? 'Ollama was not reachable — Revamp will fall back to deterministic analysis.'
                 : undefined,
             ),
           }))
@@ -436,7 +436,7 @@ export const useRelayStore = create<RelayState>()(
        * and later changes to VITE_AI_PROVIDER would be silently ignored.
        */
       merge: (persisted, current) => {
-        const saved = (persisted ?? {}) as Partial<RelayState>
+        const saved = (persisted ?? {}) as Partial<RevampState>
         return {
           ...current,
           ...saved,
@@ -465,7 +465,7 @@ export const useRelayStore = create<RelayState>()(
   ),
 )
 
-export const selectBusinessContext = (state: RelayState): BusinessContext => ({
+export const selectBusinessContext = (state: RevampState): BusinessContext => ({
   weeks: state.weeks,
   leads: state.leads,
   opportunities: state.opportunities,
@@ -474,5 +474,5 @@ export const selectBusinessContext = (state: RelayState): BusinessContext => ({
   enquiries: state.enquiries,
 })
 
-export const selectPending = (key: string) => (state: RelayState): AsyncState =>
+export const selectPending = (key: string) => (state: RevampState): AsyncState =>
   state.pending[key] ?? idle

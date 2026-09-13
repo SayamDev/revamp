@@ -1,6 +1,6 @@
 # Architecture
 
-Relay is a client-only React application. There is no backend. Everything below
+Revamp is a client-only React application. There is no backend. Everything below
 runs in the browser, and the two integrations that do not (Ollama, n8n) are
 optional and target the user's own machine.
 
@@ -129,7 +129,7 @@ and the store applies it. Three consequences:
 otherwise, and the local engine again if an n8n run throws — recording the
 fallback in the activity log rather than hiding it.
 
-### 6. Store — `src/store/useRelayStore.ts`
+### 6. Store — `src/store/useRevampStore.ts`
 
 One zustand store, persisted to `localStorage`, holding the data, the settings
 and a keyed map of async states so several panels can load independently. Every
@@ -208,7 +208,7 @@ invisible rather than to chase a coverage number:
 | `ai/demoProvider.test.ts` | End-to-end analysis, draft tone, briefing structure, analyst answers, refusal to answer unsupported questions, JSON extraction from model output |
 | `analytics/metrics.test.ts` | Dashboard arithmetic, division-by-zero cases, week comparison, SLA breaches |
 | `automation/demoAdapter.test.ts` | Every workflow's steps and effects, failure with no side effects, adapter selection and fallback |
-| `store/useRelayStore.test.ts` | The full enquiry workflow, approval, rejection, analyst history, demo reset |
+| `store/useRevampStore.test.ts` | The full enquiry workflow, approval, rejection, analyst history, demo reset |
 | `components/layout/AppShell.test.tsx` | The accessibility contract of the shell: skip link, one main landmark, and accessible names on the controls that collapse to icons |
 | `pages/Tasks.test.tsx` | Real user interactions: completing, reopening, filtering, sorting, empty state |
 | `components/GuidedStart.test.tsx` | The first-run walkthrough: three steps, dismissal, and reappearing after a demo reset |

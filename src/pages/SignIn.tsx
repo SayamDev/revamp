@@ -1,6 +1,6 @@
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 const HIGHLIGHTS = [
   'Classifies inbound enquiries and sets priority from the message itself',
@@ -11,12 +11,12 @@ const HIGHLIGHTS = [
 /**
  * Demo gate, not authentication.
  *
- * Relay has no accounts, no passwords and no personal data, so there is nothing
+ * Revamp has no accounts, no passwords and no personal data, so there is nothing
  * to protect. This screen exists to frame the demo and to make the fictional
  * nature of the data unmissable before anyone sees a dashboard.
  */
 export function SignInPage() {
-  const signIn = useRelayStore((state) => state.signIn)
+  const signIn = useRevampStore((state) => state.signIn)
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
@@ -29,7 +29,7 @@ export function SignInPage() {
             >
               R
             </span>
-            <span className="text-[17px] font-semibold tracking-[-0.015em] text-ink-900">Relay</span>
+            <span className="text-[17px] font-semibold tracking-[-0.015em] text-ink-900">Revamp</span>
           </div>
 
           <h1 className="mt-8 text-[28px] leading-[1.15] font-semibold tracking-[-0.025em] text-ink-900">

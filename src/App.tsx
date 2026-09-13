@@ -9,13 +9,13 @@ import { AutomationsPage } from '@/pages/Automations'
 import { TasksPage } from '@/pages/Tasks'
 import { ActivityLogPage } from '@/pages/ActivityLog'
 import { SignInPage } from '@/pages/SignIn'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 export default function App() {
-  const signedIn = useRelayStore((state) => state.signedIn)
+  const signedIn = useRevampStore((state) => state.signedIn)
 
   return (
-    <ErrorBoundary fallbackTitle="Relay could not start">
+    <ErrorBoundary fallbackTitle="Revamp could not start">
       {signedIn ? (
         // HashRouter keeps deep links working on static hosting (GitHub Pages)
         // without any server-side rewrite rules.

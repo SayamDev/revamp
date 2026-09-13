@@ -5,7 +5,7 @@ import { Badge, StatusDot } from '@/components/ui/Badge'
 import { ErrorState } from '@/components/ui/States'
 import { AUTOMATION_LIST } from '@/automation/definitions'
 import type { AutomationDefinition } from '@/automation/types'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { toast } from '@/store/toastStore'
 import { relativeTime } from '@/lib/time'
 import { N8N_CONFIGURED } from '@/automation/config'
@@ -17,12 +17,12 @@ import { N8N_CONFIGURED } from '@/automation/config'
  * label.
  */
 export function AutomationCard({ definition }: { definition: AutomationDefinition }) {
-  const enquiries = useRelayStore((state) => state.enquiries)
-  const issues = useRelayStore((state) => state.issues)
-  const runs = useRelayStore((state) => state.runs)
-  const weeks = useRelayStore((state) => state.weeks)
-  const runAutomation = useRelayStore((state) => state.runAutomation)
-  const pending = useRelayStore((state) => state.pending[`automation:${definition.id}`])
+  const enquiries = useRevampStore((state) => state.enquiries)
+  const issues = useRevampStore((state) => state.issues)
+  const runs = useRevampStore((state) => state.runs)
+  const weeks = useRevampStore((state) => state.weeks)
+  const runAutomation = useRevampStore((state) => state.runAutomation)
+  const pending = useRevampStore((state) => state.pending[`automation:${definition.id}`])
 
   const loading = pending?.status === 'loading'
   const ownRuns = runs.filter((run) => run.automationId === definition.id)
@@ -52,7 +52,7 @@ export function AutomationCard({ definition }: { definition: AutomationDefinitio
           ? { issue: nextIssue }
           : {}
     await runAutomation(definition.id, input)
-    const outcome = useRelayStore.getState().pending[`automation:${definition.id}`]
+    const outcome = useRevampStore.getState().pending[`automation:${definition.id}`]
     if (outcome?.status === 'error') {
       toast.error('Automation failed', outcome.error ?? undefined)
     } else {

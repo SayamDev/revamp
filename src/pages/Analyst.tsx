@@ -5,7 +5,7 @@ import { AnswerCard } from '@/components/analyst/AnswerCard'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState, ErrorState, SkeletonLines } from '@/components/ui/States'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 const SUGGESTIONS = [
   'Why did sales drop this week?',
@@ -17,10 +17,10 @@ const SUGGESTIONS = [
 
 export function AnalystPage() {
   const [question, setQuestion] = useState('')
-  const answers = useRelayStore((state) => state.answers)
-  const ask = useRelayStore((state) => state.askAnalyst)
-  const clear = useRelayStore((state) => state.clearAnswers)
-  const pending = useRelayStore((state) => state.pending['analyst'])
+  const answers = useRevampStore((state) => state.answers)
+  const ask = useRevampStore((state) => state.askAnalyst)
+  const clear = useRevampStore((state) => state.clearAnswers)
+  const pending = useRevampStore((state) => state.pending['analyst'])
   const loading = pending?.status === 'loading'
 
   const submit = (event: FormEvent) => {
@@ -44,7 +44,7 @@ export function AnalystPage() {
               </Badge>
             </span>
           }
-          description="Questions are answered from the demo dataset only. If the data cannot support an answer, Relay says so rather than guessing."
+          description="Questions are answered from the demo dataset only. If the data cannot support an answer, Revamp says so rather than guessing."
         />
         <CardBody className="space-y-3">
           <form onSubmit={submit} className="flex gap-2">

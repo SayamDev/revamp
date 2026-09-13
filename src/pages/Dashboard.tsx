@@ -4,7 +4,7 @@ import { BriefingCard } from '@/components/dashboard/BriefingCard'
 import { LeadsChart, PipelineChart } from '@/components/dashboard/DashboardCharts'
 import { OpenIssues, OverdueEnquiries } from '@/components/dashboard/AttentionLists'
 import { StatCard } from '@/components/ui/StatCard'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import {
   breachedSla,
   compareWeeks,
@@ -22,13 +22,13 @@ import { formatCurrency, formatNumber, formatPercent } from '@/lib/format'
  * response changes what this page says.
  */
 export function DashboardPage() {
-  const enquiries = useRelayStore((state) => state.enquiries)
-  const leads = useRelayStore((state) => state.leads)
-  const opportunities = useRelayStore((state) => state.opportunities)
-  const issues = useRelayStore((state) => state.issues)
-  const tasks = useRelayStore((state) => state.tasks)
-  const weeks = useRelayStore((state) => state.weeks)
-  const runs = useRelayStore((state) => state.runs)
+  const enquiries = useRevampStore((state) => state.enquiries)
+  const leads = useRevampStore((state) => state.leads)
+  const opportunities = useRevampStore((state) => state.opportunities)
+  const issues = useRevampStore((state) => state.issues)
+  const tasks = useRevampStore((state) => state.tasks)
+  const weeks = useRevampStore((state) => state.weeks)
+  const runs = useRevampStore((state) => state.runs)
 
   const metrics = useMemo(
     () =>

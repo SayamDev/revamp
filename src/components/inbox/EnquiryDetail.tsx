@@ -7,13 +7,13 @@ import { AnalysisPanel } from './AnalysisPanel'
 import { DraftPanel } from './DraftPanel'
 import { STATUS_LABEL, STATUS_TONE } from './status'
 import type { Enquiry } from '@/types'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { relativeTime } from '@/lib/time'
 
 export function EnquiryDetail({ enquiry, onBack }: { enquiry: Enquiry; onBack: () => void }) {
-  const analyse = useRelayStore((state) => state.analyseEnquiry)
-  const pending = useRelayStore((state) => state.pending[`enquiry:${enquiry.id}`])
-  const providerKey = useRelayStore((state) => state.providerKey)
+  const analyse = useRevampStore((state) => state.analyseEnquiry)
+  const pending = useRevampStore((state) => state.pending[`enquiry:${enquiry.id}`])
+  const providerKey = useRevampStore((state) => state.providerKey)
   const analysing = pending?.status === 'loading'
 
   return (
@@ -89,7 +89,7 @@ export function EnquiryDetail({ enquiry, onBack }: { enquiry: Enquiry; onBack: (
             <EmptyState
               icon={<Sparkles aria-hidden className="size-6" />}
               title="Not analysed yet"
-              description={`Relay will classify the enquiry, set a priority, extract the commercial detail, open a follow-up task and draft a reply using ${providerKey === 'ollama' ? 'your local model' : 'the demo rules engine'}.`}
+              description={`Revamp will classify the enquiry, set a priority, extract the commercial detail, open a follow-up task and draft a reply using ${providerKey === 'ollama' ? 'your local model' : 'the demo rules engine'}.`}
             />
           )}
         </CardBody>

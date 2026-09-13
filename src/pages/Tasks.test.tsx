@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TasksPage } from './Tasks'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 describe('TasksPage', () => {
   it('lists open tasks by default and hides completed ones', () => {
@@ -20,7 +20,7 @@ describe('TasksPage', () => {
 
     expect(screen.queryByText('Confirm fix window with Trenton Logistics')).not.toBeInTheDocument()
 
-    const state = useRelayStore.getState()
+    const state = useRevampStore.getState()
     expect(state.tasks.find((task) => task.id === 'task_1')?.status).toBe('done')
     expect(state.activities[0].kind).toBe('task_completed')
     expect(state.activities[0].actor).toBe('human')
@@ -34,7 +34,7 @@ describe('TasksPage', () => {
     const row = screen.getByText('Publish weekly ops summary').closest('li')!
     await user.click(within(row).getByRole('button', { name: /reopen/i }))
 
-    expect(useRelayStore.getState().tasks.find((task) => task.id === 'task_6')?.status).toBe('open')
+    expect(useRevampStore.getState().tasks.find((task) => task.id === 'task_6')?.status).toBe('open')
   })
 
   it('sorts by due date when the sort control is changed', async () => {
@@ -48,7 +48,7 @@ describe('TasksPage', () => {
 
   it('shows an empty state once every task is done', async () => {
     const user = userEvent.setup()
-    const { tasks, completeTask } = useRelayStore.getState()
+    const { tasks, completeTask } = useRevampStore.getState()
     tasks.forEach((task) => completeTask(task.id))
 
     render(<TasksPage />)

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { GuidedStart } from './GuidedStart'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 const renderGuide = () =>
   render(
@@ -27,14 +27,14 @@ describe('GuidedStart', () => {
     await user.click(screen.getByRole('button', { name: /dismiss the walkthrough/i }))
 
     expect(container).toBeEmptyDOMElement()
-    expect(useRelayStore.getState().guideDismissed).toBe(true)
+    expect(useRevampStore.getState().guideDismissed).toBe(true)
   })
 
   it('comes back when the demo is reset, so a repeat demo starts the same way', () => {
-    useRelayStore.getState().dismissGuide()
-    expect(useRelayStore.getState().guideDismissed).toBe(true)
+    useRevampStore.getState().dismissGuide()
+    expect(useRevampStore.getState().guideDismissed).toBe(true)
 
-    useRelayStore.getState().resetDemoData()
+    useRevampStore.getState().resetDemoData()
 
     renderGuide()
     expect(screen.getByRole('heading', { name: /see the whole workflow/i })).toBeInTheDocument()

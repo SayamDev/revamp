@@ -5,7 +5,7 @@ import { Card, CardBody, CardHeader } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState, ErrorState, SkeletonLines } from '@/components/ui/States'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 import { relativeTime } from '@/lib/time'
 
 /**
@@ -16,11 +16,11 @@ import { relativeTime } from '@/lib/time'
  * cards below it read — the briefing cannot contradict the dashboard.
  */
 export function BriefingCard() {
-  const briefing = useRelayStore((state) => state.briefing)
-  const generateBriefing = useRelayStore((state) => state.generateBriefing)
-  const pending = useRelayStore((state) => state.pending['briefing'])
-  const providerKey = useRelayStore((state) => state.providerKey)
-  const seededAt = useRelayStore((state) => state.seededAt)
+  const briefing = useRevampStore((state) => state.briefing)
+  const generateBriefing = useRevampStore((state) => state.generateBriefing)
+  const pending = useRevampStore((state) => state.pending['briefing'])
+  const providerKey = useRevampStore((state) => state.providerKey)
+  const seededAt = useRevampStore((state) => state.seededAt)
 
   const loading = pending?.status === 'loading'
 

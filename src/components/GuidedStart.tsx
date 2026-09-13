@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, X } from 'lucide-react'
-import { useRelayStore } from '@/store/useRelayStore'
+import { useRevampStore } from '@/store/useRevampStore'
 
 const STEPS = [
   {
@@ -9,7 +9,7 @@ const STEPS = [
   },
   {
     title: 'Run the AI analysis',
-    body: 'Relay classifies it, sets a priority and response window, extracts the commercial detail, opens a follow-up task and drafts a reply.',
+    body: 'Revamp classifies it, sets a priority and response window, extracts the commercial detail, opens a follow-up task and drafts a reply.',
   },
   {
     title: 'Approve the response',
@@ -26,8 +26,8 @@ const STEPS = [
  * repeat demo starts the same way as the first.
  */
 export function GuidedStart() {
-  const dismissed = useRelayStore((state) => state.guideDismissed)
-  const dismissGuide = useRelayStore((state) => state.dismissGuide)
+  const dismissed = useRevampStore((state) => state.guideDismissed)
+  const dismissGuide = useRevampStore((state) => state.dismissGuide)
 
   if (dismissed) return null
 

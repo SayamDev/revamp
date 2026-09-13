@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { useRelayStore } from './useRelayStore'
+import { useRevampStore } from './useRevampStore'
 
-const store = () => useRelayStore.getState()
+const store = () => useRevampStore.getState()
 
 describe('enquiry workflow', () => {
   it('analyses an enquiry, opens a task, drafts a reply and waits for approval', async () => {
